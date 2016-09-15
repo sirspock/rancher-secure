@@ -16,20 +16,15 @@ the machine you are creating the certificates on.
 Use the temporary webserver and follow the instructions.
 
 ```
-DOMAIN=[whatever domain you are creating a certificate for]
+DOMAIN=rancher.linets.cl
 docker run -it --rm -p 443:443 -p 80:80 \
   --name certbot \
   -v "$(pwd)/letsencrypt/etc:/etc/letsencrypt" \
   -v "$(pwd)/letsencrypt/var/lib/:/var/lib/letsencrypt" \
   quay.io/letsencrypt/letsencrypt:latest certonly;
-sudo chown -R $USER:$USER letsencrypt;
 mkdir -p certs;
 cp -L letsencrypt/etc/live/$DOMAIN/* certs/;
-
-# You are then free to remove the letsencrypt directory
 rm -rf letsencrypt;
-
-# Replace hostname (optional step if not done before)
 sed -i.bak -e "s/{HOSTNAME}/$DOMAIN/g" conf.d/default.conf;
 rm conf.d/default.conf.bak;
 ```
